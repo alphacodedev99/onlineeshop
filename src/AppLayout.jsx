@@ -13,7 +13,7 @@ axios.defaults.baseURL = 'https://dummyjson.com';
 function AppLayout() {
 
   const [activeHeader, setActiveHeader] = useState(true);
-
+  // useEffect - uzmi CART iz LocalStorage i vrati/napuni ponovo u Redux...
   return (
     <div>
      {activeHeader &&  <HeaderComponent setActiveHeader={setActiveHeader} />}
