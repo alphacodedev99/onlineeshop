@@ -7,14 +7,18 @@ import { Rating } from '@mui/material';
 import { FaCheck } from 'react-icons/fa6';
 import { RxCross1 } from 'react-icons/rx';
 import { IoIosHeartEmpty } from 'react-icons/io';
-import { FaShippingFast } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { FaHeart, FaShippingFast } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 import { saveInCartAction } from '../store/cartSlice';
+import { updateFavoriteAction } from '../store/favoriteSlice';
 function SingleProductPage() {
 	const [singleProduct, setSingleProduct] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentImage, setCurrentImage] = useState(0);
 	const [countProduct, setCountProduct] = useState(1);
+
+	const [favoriteIdIcon, setFavoriteIdIcon] = useState(null);
+	const {allFavorite} = useSelector((state) => state.favoriteStore);
 
 	// dispatch for redux
 	const dispatch = useDispatch();
@@ -31,6 +35,21 @@ function SingleProductPage() {
 			})
 			.catch((err) => console.log(err));
 	}, []);
+
+	useEffect(() => {
+		if(allFavorite.length > 0){
+			allFavorite.find((item) => {
+				if (item.id === singleProduct.id) {
+					setFavoriteIdIcon(item.id);
+					return;
+				}
+			})
+
+		}else{
+			setFavoriteIdIcon(null);
+		}
+	}, [allFavorite]);
+
 	// 3. Priakzi ga frajeru!!!
 
 	function handleImage(index) {
@@ -144,7 +163,9 @@ function SingleProductPage() {
 								Add To Cart
 							</Link>
 							<div className='bg-[#EEE] p-[10px] rounded-full'>
-								<IoIosHeartEmpty size={30} />
+								
+
+									{favoriteIdIcon === parseInt(id) ? <FaHeart color='red' size={30} onClick={() => dispatch(updateFavoriteAction(singleProduct))} /> : <FaHeart size={30}  onClick={() => dispatch(updateFavoriteAction(singleProduct))} />}
 							</div>
 						</div>
 						<hr className='my-[20px]' />
